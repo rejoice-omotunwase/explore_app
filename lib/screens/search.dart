@@ -98,11 +98,16 @@ class _SearchScreenState extends State<SearchScreen> {
                   icon: Icons.filter_alt_outlined,
                   onPressed: () {
                     showModalBottomSheet(
+                        isScrollControlled: true,
                         shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.vertical(
                                 top: Radius.circular(20.0))),
                         context: context,
                         builder: (context) => DraggableScrollableSheet(
+                            expand: false,
+                            initialChildSize: 0.4,
+                            maxChildSize: 0.9,
+                            minChildSize: 0.32,
                             builder: (context, scrollController) =>
                                 const Filter()));
                   },

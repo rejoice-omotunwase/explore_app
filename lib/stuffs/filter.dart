@@ -1,3 +1,4 @@
+import 'package:explore_app/screens/search.dart';
 import 'package:explore_app/stuffs/lists.dart';
 import 'package:flutter/material.dart';
 import 'filter_bottom.dart';
@@ -14,6 +15,7 @@ class _FilterState extends State<Filter> {
 
   Widget bottomButtons() {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         FilterBottomButton(
@@ -43,128 +45,145 @@ class _FilterState extends State<Filter> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
+    return Stack(
+      alignment: Alignment.topCenter,
+      clipBehavior: Clip.none,
       children: [
-        Container(
-          margin: const EdgeInsets.only(top: 20.0, left: 15.0, right: 15.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                "Filter",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        Positioned(
+            top: -15,
+            child: Container(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                color: Colors.white,
               ),
-              IconButton(
-                icon: const Icon(
-                  Icons.cancel_rounded,
-                  color: Colors.grey,
-                ),
-                onPressed: () {
-                  setState(() {
-                    Navigator.pop(context);
-                  });
-                },
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: NotificationListener<OverscrollIndicatorNotification>(
-            onNotification: (OverscrollIndicatorNotification overflow) {
-              overflow.disallowIndicator();
-              return true;
-            },
-            child: ListView(
-              children: [
-                Theme(
-                  data: Theme.of(context)
-                      .copyWith(dividerColor: Colors.transparent),
-                  child: ExpansionTile(
-                    onExpansionChanged: (bool expanded) {
+              width: 60,
+              height: 7,
+            )),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(top: 20.0, left: 15.0, right: 15.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Filter",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.cancel_rounded,
+                      color: Colors.grey,
+                    ),
+                    onPressed: () {
                       setState(() {
-                        if (expanded == true) {
-                          bottomButtons();
-                        } else {
-                          return;
-                        }
+                        Navigator.pop(context);
                       });
                     },
-                    title: const Text(
-                      "Continent",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: NotificationListener<OverscrollIndicatorNotification>(
+                onNotification: (OverscrollIndicatorNotification overflow) {
+                  overflow.disallowIndicator();
+                  return true;
+                },
+                child: ListView(
+                  children: [
+                    Theme(
+                      data: Theme.of(context)
+                          .copyWith(dividerColor: Colors.transparent),
+                      child: ExpansionTile(
+                        onExpansionChanged: (bool expanded) {
+                          setState(() {
+                            if (expanded == true) {
+                              bottomButtons();
+                            } else {
+                              return;
+                            }
+                          });
+                        },
+                        title: const Text(
+                          "Continent",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        children: [
+                          Column(
+                            children: [
+                              ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: continentsList.length,
+                                itemBuilder: (context, index) {
+                                  return CheckboxListTile(
+                                    title: Text(continentsList[index],
+                                        style: TextStyle(
+                                            color: Colors.grey.shade600)),
+                                    checkboxShape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(7.0)),
+                                    value: checkBox1.contains(index),
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        checkBox1.contains(index)
+                                            ? checkBox1.remove(index)
+                                            : checkBox1.add(index);
+                                      });
+                                    },
+                                  );
+                                },
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
-                    children: [
-                      Column(
+                    Theme(
+                      data: Theme.of(context)
+                          .copyWith(dividerColor: Colors.transparent),
+                      child: ExpansionTile(
+                        title: const Text(
+                          "Time zone",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         children: [
                           ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: continentsList.length,
                             itemBuilder: (context, index) {
                               return CheckboxListTile(
-                                title: Text(continentsList[index],
-                                    style:
-                                        TextStyle(color: Colors.grey.shade600)),
-                                checkboxShape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(7.0)),
-                                value: checkBox1.contains(index),
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    checkBox1.contains(index)
-                                        ? checkBox1.remove(index)
-                                        : checkBox1.add(index);
+                                  title: Text(timeList[index],
+                                      style: TextStyle(
+                                          color: Colors.grey.shade600)),
+                                  checkboxShape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5.0)),
+                                  value: checkBox2.contains(index),
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      checkBox2.contains(index)
+                                          ? checkBox2.remove(index)
+                                          : checkBox2.add(index);
+                                    });
                                   });
-                                },
-                              );
                             },
                           ),
                         ],
-                      )
-                    ],
-                  ),
-                ),
-                Theme(
-                  data: Theme.of(context)
-                      .copyWith(dividerColor: Colors.transparent),
-                  child: ExpansionTile(
-                    title: const Text(
-                      "Time zone",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    children: [
-                      ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: continentsList.length,
-                        itemBuilder: (context, index) {
-                          return CheckboxListTile(
-                              title: Text(timeList[index],
-                                  style:
-                                      TextStyle(color: Colors.grey.shade600)),
-                              checkboxShape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5.0)),
-                              value: checkBox2.contains(index),
-                              onChanged: (newValue) {
-                                setState(() {
-                                  checkBox2.contains(index)
-                                      ? checkBox2.remove(index)
-                                      : checkBox2.add(index);
-                                });
-                              });
-                        },
                       ),
-                    ],
-                  ),
+                    ),
+                    Container(
+                        alignment: Alignment.bottomCenter,
+                        margin: const EdgeInsets.only(
+                            top: 20.0, left: 15.0, right: 20.0, bottom: 20),
+                        child: bottomButtons()),
+                  ],
                 ),
-                Container(
-                    alignment: Alignment.bottomCenter,
-                    margin: const EdgeInsets.only(
-                        top: 20.0, left: 15.0, right: 20.0, bottom: 20),
-                    child: bottomButtons()),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ],
     );
